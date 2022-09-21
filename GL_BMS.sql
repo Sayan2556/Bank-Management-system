@@ -200,7 +200,7 @@ LIMIT 5;
 # ///////////////////////////////////////////////////////////////////// STORE PROCEDURE /////////////////////////////////////////////////////////////////////////////////
 
 # *************************************************************** STORE PROCEDURE FOR ALL CUSTOMER AND BANK DETAILS *********************************************************************
-/* CREATE DEFINER=`root`@`localhost` PROCEDURE `customer_details_bank_info`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `customer_details_bank_info`()
 BEGIN
 SELECT * FROM customer_info c
  join
@@ -212,34 +212,34 @@ on ai.CUSTOMER_ID = cr.CUSTOMER_ID
 join
 bank_info b
 on b.IFSC_CODE = ai.IFSC_CODE;
-END */
+END 
 
 call customer_details_bank_info;
 # *************************************************** STORE PROCEDURE FOR ACCOUNTS DETAILS FOR EACH CUSTOMER*********************************************************
 
-/* CREATE DEFINER=`root`@`localhost` PROCEDURE `ACCOUNT_INFO`()
+ CREATE DEFINER=`root`@`localhost` PROCEDURE `ACCOUNT_INFO`()
 BEGIN
 SELECT IFSC_CODE,INTEREST,INITIAL_DEPOSIT AS "BALANCE RS",ACCOUNT_NO,ACCOUNT_TYPE
 FROM
 account_info
 ORDER BY IFSC_CODE;
-END */
+END 
 CALL ACCOUNT_INFO;
 
 # **************************************** STORE PROCEDURE FOR ACCOUINT BALANCE DETAILS USING AMMOUNT VALUES ***********************************************
-/* CREATE DEFINER=`root`@`localhost` PROCEDURE `balance_info`(in INITIAL_DESPOIT BIGINT(10) )
+CREATE DEFINER=`root`@`localhost` PROCEDURE `balance_info`(in INITIAL_DESPOIT BIGINT(10) )
 BEGIN
 SELECT * FROM account_info WHERE INITIAL_DEPOSIT=INITIAL_DEPOSIT;
-END */
+END
 CALL balance_info(50000);
 
 # ********************************************************** STORE PROCEDURE FOR BANK DETAILS  *************************************************************
-/* CREATE DEFINER=`root`@`localhost` PROCEDURE `bank_details`(BANK_NAME VARCHAR(30))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bank_details`(BANK_NAME VARCHAR(30))
 BEGIN
 SELECT * FROM bank_info bi
 where
 bi.BANK_NAME = BANK_NAME;
-END */
+END
 CALL bank_details("STATE BANK OF INDIA");
 
 # ***************************************************** MODIFY CONSTRAINT *********************************************************************************
