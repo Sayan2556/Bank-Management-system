@@ -1,3 +1,11 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ((BANK DATABASE SYSTEM)) SQL PROJECT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#            ***************************************************  DDL,DML,DQL,DCL AND TCL COMMANDS  *********************************************************************
+#                    ****************************************************  STORE PROCEDURE  ******************************************************************* 
+
+
+
+
 -- ////////////////////////////////////////////////////////// CUSTOMER PERSONAL INFORMATION TABLE ////////////////////////////////////////////////////////////////////////
 create table Customer_Info(CUSTOMER_ID VARCHAR(5),
 CUSTOMER_NAME varchar(20),
@@ -59,6 +67,8 @@ VALUES
 SELECT * FROM Customer_Info;
 UPDATE customer_info SET GUARDIAN_NAME="ASHOK SARKAR" WHERE CUSTOMER_ID="SB006";
 UPDATE customer_info SET GUARDIAN_NAME="SANKAR GHOSH" WHERE CUSTOMER_ID="SB009";
+
+DESC customer_info;
 
 
 -- /////////////////////////////////////////////////////////////////////// CUSTOMER_REFERENCE TABLE /////////////////////////////////////////////////////////////////////
@@ -173,4 +183,101 @@ FROM
 account_info
 WHERE ACCOUNT_TYPE = "SALARY ACC" 
 ORDER BY IFSC_CODE;
+
+# *************************************************************** SELECTION OF TOP 5 ROWS *********************************************************************
+SELECT * FROM account_info
+LIMIT 5;
+
+SELECT * FROM bank_info
+LIMIT 5;
+
+SELECT * FROM customer_info
+LIMIT 5;
+
+SELECT * FROM customer_reference
+LIMIT 5;
+
+# ///////////////////////////////////////////////////////////////////// STORE PROCEDURE /////////////////////////////////////////////////////////////////////////////////
+
+# *************************************************************** STORE PROCEDURE FOR ALL CUSTOMER AND BANK DETAILS *********************************************************************
+/* CREATE DEFINER=`root`@`localhost` PROCEDURE `customer_details_bank_info`()
+BEGIN
+SELECT * FROM customer_info c
+ join
+ account_info ai
+on c.CUSTOMER_ID=ai.CUSTOMER_ID
+join
+customer_reference cr 
+on ai.CUSTOMER_ID = cr.CUSTOMER_ID
+join
+bank_info b
+on b.IFSC_CODE = ai.IFSC_CODE;
+END */
+
+call customer_details_bank_info;
+# *************************************************** STORE PROCEDURE FOR ACCOUNTS DETAILS FOR EACH CUSTOMER*********************************************************
+
+/* CREATE DEFINER=`root`@`localhost` PROCEDURE `ACCOUNT_INFO`()
+BEGIN
+SELECT IFSC_CODE,INTEREST,INITIAL_DEPOSIT AS "BALANCE RS",ACCOUNT_NO,ACCOUNT_TYPE
+FROM
+account_info
+ORDER BY IFSC_CODE;
+END */
+CALL ACCOUNT_INFO;
+
+# **************************************** STORE PROCEDURE FOR ACCOUINT BALANCE DETAILS USING AMMOUNT VALUES ***********************************************
+/* CREATE DEFINER=`root`@`localhost` PROCEDURE `balance_info`(in INITIAL_DESPOIT BIGINT(10) )
+BEGIN
+SELECT * FROM account_info WHERE INITIAL_DEPOSIT=INITIAL_DEPOSIT;
+END */
+CALL balance_info(50000);
+
+# ********************************************************** STORE PROCEDURE FOR BANK DETAILS  *************************************************************
+/* CREATE DEFINER=`root`@`localhost` PROCEDURE `bank_details`(BANK_NAME VARCHAR(30))
+BEGIN
+SELECT * FROM bank_info bi
+where
+bi.BANK_NAME = BANK_NAME;
+END */
+CALL bank_details("STATE BANK OF INDIA");
+
+# ***************************************************** MODIFY CONSTRAINT *********************************************************************************
+SHOW TABLES;
+DESC ACCOUNT_INFO;
+ALTER TABLE account_info MODIFY ACCOUNT_TYPE varchar(15) NOT NULL;
+
+# ************************************************* RENAMING A COLUMN ***********************************************************************************
+SHOW TABLES;
+DESC ACCOUNT_INFO;
+ALTER TABLE ACCOUNT_INFO CHANGE REGISTRATION_DATE REG_DATE date; 
+
+# ************************************************* COMMIT AND ROLL BACK ***********************************************************************************
+SET AUTOCOMMIT = 0;
+DESC bank_info;
+INSERT INTO bank_info(IFSC_CODE,BANK_NAME,BRANCH_NAME) VALUES ("0146655","HDFC BANK LTD","KERALA BRANCH");
+SELECT * FROM bank_info;
+/* TIME TO GO TO THE PREVIOUS POSITION OF THE TABLE USING rollback */
+ROLLBACK;
+SELECT * FROM bank_info;
+INSERT INTO bank_info(IFSC_CODE,BANK_NAME,BRANCH_NAME) VALUES ("006684","STATE BANK OF INDIA","KERALA BRANCH");
+COMMIT;
+SELECT * FROM bank_info; # VALUES INSERTED PERMANENTLY IN THE DATABASE
+
+# ********************************************************* GRANT & REVOKE *******************************************************************************
+# *************************************************** GIVING PERMISSION TO USER SAYAN1 TO ACCESS A PARTICULAR TABLE *****************************************************
+grant select 
+on account_info
+to 'SAYAN1';
+
+# *************************************************** GIVING PERMISSION TO USER SAYAN2 TO ACCESS A PARTICULAR TABLE *****************************************************
+grant select,update,insert
+on customer_info
+to 'SAYAN2';
+
+
+
+
+
+
 
