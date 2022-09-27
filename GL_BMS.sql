@@ -275,6 +275,18 @@ grant select,update,insert
 on customer_info
 to 'SAYAN2';
 
+# ************************************************* INSERTING TEMPORARY VALUES USING TRIGGERS,COMMIT AND ROLLBACK  ********************************************************
+SET AUTOCOMMIT = 0;
+CREATE TRIGGER SAMPLE_TRIGGER
+BEFORE INSERT   # YOU CAN WRITE UPDATE USING AFTER ALSO
+ON bank_info
+FOR EACH ROW    # YOU CAN WRITE COLUMN ALSO 
+SET NEW.IFSC_CODE = NEW.IFSC_CODE + 1;
+INSERT INTO bank_info(IFSC_CODE,BANK_NAME,BRANCH_NAME) VALUES ("14458","HDFC BANK LTD","SAHAPUR BRANCH");
+SELECT * FROM bank_info;
+ROLLBACK;
+
+
 
 
 
